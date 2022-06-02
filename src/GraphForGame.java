@@ -15,7 +15,6 @@ public class GraphForGame {
             this.x = x;
             this.y = y;
             num = map(x, y);
-            this.state = state;
         }
 
         void print() {
@@ -27,16 +26,15 @@ public class GraphForGame {
     static int numOfCells = 426;
     static int rowSize = 25;
     static int numOfBalls = 10;
-    ArrayList<Integer>[] adjList;
-    Node[] nodes;
-    public int[] redBalls;
-    public int[] blueBalls;
+    static ArrayList<Integer>[] adjList;
+    static Node[] nodes;
+    State state;
 
-    GraphForGame() {
+    GraphForGame()
+    {
         adjList = new ArrayList[numOfCells];
         nodes = new Node[numOfCells];
-        redBalls = new int[numOfBalls];
-        blueBalls = new int[numOfBalls];
+        state = new State();
         InitializeNodes();
         InitializeLinks();
     }
@@ -47,7 +45,7 @@ public class GraphForGame {
         adjList[a].add(b);
     }
 
-    int map(int x, int y) {
+    public static int map(int x, int y) {
         return x * rowSize + y;
     }
 
@@ -56,11 +54,11 @@ public class GraphForGame {
         return num > 0 && num < numOfCells;
     }
 
-    int getRow(int num) {
+    public static int getRow(int num) {
         return num / rowSize;
     }
 
-    int getCol(int num) {
+    public static int getCol(int num) {
         return num % rowSize;
     }
 
@@ -78,7 +76,7 @@ public class GraphForGame {
             for (int node = 0; node < numOfNodes; node++) {
                 Node temp = new Node(r, start + node * 2, nodeState.Player);
                 nodes[temp.num] = temp;
-                redBalls[redI++] = temp.num;
+                state.redBalls[redI++] = temp.num;
             }
             numOfNodes++;
             start--;
@@ -115,7 +113,7 @@ public class GraphForGame {
             for (int node = 0; node < numOfNodes; node++) {
                 Node temp = new Node(r, start + node * 2, nodeState.AI);
                 nodes[temp.num] = temp;
-                blueBalls[blueI++] = temp.num;
+                state.blueBalls[blueI++] = temp.num;
             }
             numOfNodes--;
             start++;
@@ -155,7 +153,8 @@ public class GraphForGame {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         GraphForGame graph = new GraphForGame();
         //graph.printNodes();
     }
