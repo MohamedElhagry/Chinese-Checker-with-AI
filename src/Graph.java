@@ -4,7 +4,7 @@ enum nodeState {
     Player, AI, Empty
 }
 
-public class GraphForGame {
+public class Graph {
 
     public class Node {
         nodeState state;
@@ -29,7 +29,7 @@ public class GraphForGame {
     static ArrayList<Integer>[] adjList;
     static Node[] nodes;
 
-    GraphForGame()
+    Graph()
     {
         adjList = new ArrayList[numOfCells];
         nodes = new Node[numOfCells];
@@ -151,7 +151,7 @@ public class GraphForGame {
 
     public static void main(String[] args)
     {
-        GraphForGame graph = new GraphForGame();
+        Graph graph = new Graph();
         //graph.printNodes();
     }
 

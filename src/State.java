@@ -1,10 +1,34 @@
 import java.util.Arrays;
-import java.util.Comparator;
 
-public class State implements Comparator<State> {
+public class State implements Comparable<State> {
 
     public int[] redBalls;
     public int[] blueBalls;
+    private static final int[] topTriangle = {
+            Graph.map(0, 12),
+            Graph.map(1, 11),
+            Graph.map(1, 13),
+            Graph.map(2, 10),
+            Graph.map(2, 12),
+            Graph.map(2, 14),
+            Graph.map(3, 9),
+            Graph.map(3, 11),
+            Graph.map(3, 13),
+            Graph.map(3, 15)
+    };
+
+    private static final int[] downTriangle = {
+            Graph.map( 13, 9),
+            Graph.map(13,11),
+            Graph.map(13,13),
+            Graph.map(13,15),
+            Graph.map(14,10),
+            Graph.map(14,12),
+            Graph.map(14,14),
+            Graph.map(15,11),
+            Graph.map(15,13),
+            Graph.map(16,12)
+    };
 
     private int utility;
 
@@ -17,6 +41,55 @@ public class State implements Comparator<State> {
         this.calcUtility();
     }
 
+    State(State s)
+    {
+        this.redBalls = new int[10];
+        this.blueBalls = new int[10];
+        StateManager.cpy(this, s);
+    }
+
+    public static State getInitialState()
+    {
+        int[] x = new int[]{0, 1, 1, 2, 2, 2, 3, 3, 3, 3};
+        int[] y = new int[]{12,11,13,10,12,14,9,11,13,15};
+        int[] red = new int[10];
+        int[] blue = new int[10];
+        for(int i=0;i<10;i++) {
+            red[i] = Graph.map(x[i], y[i]);
+        }
+        x = new int[]{16, 15, 15, 14, 14, 14, 13, 13, 13, 13};
+        for(int i=0;i<10;i++) {
+            blue[i] = Graph.map(x[i], y[i]);
+        }
+
+        return new State(red, blue);
+    }
+
+    boolean equal(int []a, int []b)
+    {
+        Arrays.sort(b);
+        for(int i=0; i<a.length; i++)
+            if(a[i] != b[i])
+                return false;
+
+        return true;
+    }
+
+    public int isWin()
+    {
+        //AI wins
+        if(equal(topTriangle, this.blueBalls))
+            return 1;
+
+        //Player wins
+        if(equal(downTriangle, this.redBalls))
+            return -1;
+
+        //game still in progress
+        return 0;
+
+    }
+
     int getUtility(){
         return utility;
     }
@@ -25,12 +98,6 @@ public class State implements Comparator<State> {
         utility = val;
     }
 
-    State(State s)
-    {
-        this.redBalls = new int[10];
-        this.blueBalls = new int[10];
-        StateManager.cpy(this, s);
-    }
 
     void setRedBalls(int ind, int val){
         this.redBalls[ind] = val;
@@ -42,6 +109,13 @@ public class State implements Comparator<State> {
         this.utility = this.calcUtility();
     }
 
+    public void print()
+    {
+        for(int i=0; i<10; i++)
+            System.out.println("(" + Graph.getRow(blueBalls[i]) + "," + Graph.getCol(blueBalls[i]) + ")");
+    }
+
+
     public static int manhattanDistance(int x1, int y1, int x2, int y2)
     {
         return Math.abs(x1-x2)+Math.abs(y1-y2);
@@ -51,20 +125,28 @@ public class State implements Comparator<State> {
     {
         int blueUtility = 0;
         //destination for AI
-        int destX = 0, destY = 12;
+        int destRow = 0, destCol = 12;
+        for(int i=0; i<10; i++){
+            if(!(StateManager.find(blueBalls, topTriangle[i]) || StateManager.find(redBalls, topTriangle[i]))){
+                destRow = Graph.getRow(topTriangle[i]);
+                destCol = Graph.getCol(topTriangle[i]);
+                break;
+            }
+        }
         for(int num:this.blueBalls)
         {
-            int x = GraphForGame.getRow(num);
-            int y = GraphForGame.getCol(num);
-            blueUtility += manhattanDistance(x, y, destX, destY);
+            int row = Graph.getRow(num);
+            int col = Graph.getCol(num);
+            blueUtility += manhattanDistance(row, col, destRow, destCol);
         }
         int redUtility = 0;
-        destX = 16;
+        destRow = 16;
+        destCol = 12;
         for(int num:this.redBalls)
         {
-            int x = GraphForGame.getRow(num);
-            int y = GraphForGame.getCol(num);
-            redUtility += manhattanDistance(x, y, destX, destY);
+            int row = Graph.getRow(num);
+            int col = Graph.getCol(num);
+            redUtility += manhattanDistance(row, col, destRow, destCol);
         }
 
         //System.out.println("blue ut = "+blueUtility);
@@ -76,31 +158,28 @@ public class State implements Comparator<State> {
     }
 
     @Override
-    public int compare(State a, State b)
-    {
-        Arrays.sort(a.redBalls);
+    public int compareTo(State b) {
+
+        Arrays.sort(this.redBalls);
         Arrays.sort(b.blueBalls);
-        for(int i = 0; i< a.redBalls.length; i++)
+        for(int i = 0; i< this.redBalls.length; i++)
         {
-            if(a.redBalls[i] < b.redBalls[i])
+            if(this.redBalls[i] < b.redBalls[i])
             {
                 return -1;
-            }else if(a.redBalls[i] > b.redBalls[i]){
+            }else if(this.redBalls[i] > b.redBalls[i]){
                 return 1;
             }
         }
-        for(int i=0;i<a.blueBalls.length;i++)
+        for(int i=0;i<this.blueBalls.length;i++)
         {
-            if(a.blueBalls[i] < b.blueBalls[i])
+            if(this.blueBalls[i] < b.blueBalls[i])
             {
                 return -1;
-            }else if(a.blueBalls[i] > b.blueBalls[i]){
+            }else if(this.blueBalls[i] > b.blueBalls[i]){
                 return 1;
             }
         }
         return 0;
     }
-
-
-
 }
