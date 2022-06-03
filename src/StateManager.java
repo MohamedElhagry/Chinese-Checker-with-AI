@@ -6,7 +6,7 @@ import java.util.TreeSet;
 
 public class StateManager
 {
-    State curr;
+    public static State curr;
     static final int ballsSize = 10;
     static Set<State> open = new TreeSet<>();
     static Set<State> closed  = new TreeSet<>();
@@ -56,7 +56,7 @@ public class StateManager
         return result;
     }
 
-    boolean find(int[] arr, int target)
+    static boolean find(int[] arr, int target)
     {
         for(int i=0;i<arr.length;i++){
             if(arr[i] == target){
@@ -71,25 +71,6 @@ public class StateManager
             dest.redBalls[i] = src.redBalls[i];
             dest.blueBalls[i] = src.blueBalls[i];
         }
-    }
-
-    public static void main(String[] args)
-    {
-        new GraphForGame();
-        StateManager mg = new StateManager();
-
-        ArrayList<State> allStates = mg.getChildren(mg.curr, false);
-
-        for(State s:allStates){
-            System.out.println("red values");
-            for(int nodeNum:s.redBalls){
-                int x = GraphForGame.getRow(nodeNum);
-                int y = GraphForGame.getCol(nodeNum);
-                System.out.print("("+x+", "+y+") ");
-            }
-            System.out.println();
-        }
-
     }
 
 }
