@@ -28,13 +28,11 @@ public class GraphForGame {
     static int numOfBalls = 10;
     static ArrayList<Integer>[] adjList;
     static Node[] nodes;
-    State state;
 
     GraphForGame()
     {
         adjList = new ArrayList[numOfCells];
         nodes = new Node[numOfCells];
-        state = new State();
         InitializeNodes();
         InitializeLinks();
     }
@@ -76,7 +74,6 @@ public class GraphForGame {
             for (int node = 0; node < numOfNodes; node++) {
                 Node temp = new Node(r, start + node * 2, nodeState.Player);
                 nodes[temp.num] = temp;
-                state.redBalls[redI++] = temp.num;
             }
             numOfNodes++;
             start--;
@@ -113,7 +110,6 @@ public class GraphForGame {
             for (int node = 0; node < numOfNodes; node++) {
                 Node temp = new Node(r, start + node * 2, nodeState.AI);
                 nodes[temp.num] = temp;
-                state.blueBalls[blueI++] = temp.num;
             }
             numOfNodes--;
             start++;

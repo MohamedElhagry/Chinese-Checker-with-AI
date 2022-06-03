@@ -10,16 +10,18 @@ public class StateManager
 
     StateManager()
     {
-        curr = new State();
         int[] x = new int[]{0, 1, 1, 2, 2, 2, 3, 3, 3, 3};
         int[] y = new int[]{12,11,13,10,12,14,9,11,13,15};
+        int[] red = new int[10];
+        int[] blue = new int[10];
         for(int i=0;i<10;i++) {
-            curr.redBalls[i] = GraphForGame.map(x[i], y[i]);
+            red[i] = GraphForGame.map(x[i], y[i]);
         }
         x = new int[]{16, 15, 15, 14, 14, 14, 13, 13, 13, 13};
         for(int i=0;i<10;i++) {
-            curr.blueBalls[i] = GraphForGame.map(x[i], y[i]);
+            blue[i] = GraphForGame.map(x[i], y[i]);
         }
+        curr = new State(red, blue);
     }
 
     void setState(State newState)
@@ -34,9 +36,8 @@ public class StateManager
 
     public static ArrayList<State> getChildren(State state, boolean isAi)
     {
-        State newState = new State();
+        State newState = new State(state);
         ArrayList<State> result = new ArrayList<>();
-        cpy(newState, state);
         for(int i=0;i<ballsSize;i++) {
 
             int startingNode;
@@ -124,20 +125,45 @@ public class StateManager
             dest.redBalls[i] = src.redBalls[i];
             dest.blueBalls[i] = src.blueBalls[i];
         }
+        dest.setUtillity(src.getUtility());
     }
 
     public static void main(String[] args)
     {
         new GraphForGame();
         StateManager mg = new StateManager();
-        /*
-        mg.curr.blueBalls[8] = GraphForGame.map(12,14);
-        mg.curr.blueBalls[9] = GraphForGame.map(10,14);
-         */
 
-        ArrayList<State> allStates = mg.getChildren(mg.curr, true);
+        mg.curr.setRedBalls(4, GraphForGame.map(5,5));
+        mg.curr.setRedBalls(6, GraphForGame.map(4,18));
+
+        mg.curr.setBlueBalls(4, GraphForGame.map(5,7));
+        mg.curr.setBlueBalls(6, GraphForGame.map(6,10));
+        mg.curr.setBlueBalls(7, GraphForGame.map(7,17));
+
+        System.out.println(mg.curr.getUtility());
+
+        //ArrayList<State> allStates = mg.getChildren(mg.curr, true);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         /*
+
         for(int nodeNum:mg.curr.blueBalls){
             int x = GraphForGame.getRow(nodeNum);
             int y = GraphForGame.getCol(nodeNum);
@@ -147,13 +173,13 @@ public class StateManager
 
 
         for(State s:allStates){
-            //System.out.println("red values");
+            System.out.println("red values");
             for(int nodeNum:s.blueBalls){
                 int x = GraphForGame.getRow(nodeNum);
                 int y = GraphForGame.getCol(nodeNum);
-                //System.out.print("("+x+", "+y+") ");
+                System.out.print("("+x+", "+y+") ");
             }
-            //System.out.println();
+            System.out.println();
         }
          */
 
