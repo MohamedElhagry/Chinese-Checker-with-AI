@@ -35,7 +35,7 @@ public class GUI extends JFrame implements MouseListener
         {
             g.setColor(Color.WHITE);
             if(node == null) continue;
-            Point position = new Point(map(GraphForGame.getRow(node.num), GraphForGame.getCol(node.num)));
+            Point position = new Point(map(GraphForGame.getCol(node.num), GraphForGame.getRow(node.num)));
             if(StateManager.find(StateManager.curr.redBalls, node.num))
                 g.setColor(Color.RED);
             else if(StateManager.find(StateManager.curr.blueBalls, node.num))
