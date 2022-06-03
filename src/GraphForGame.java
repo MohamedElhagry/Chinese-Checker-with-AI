@@ -49,9 +49,9 @@ public class GraphForGame {
         return x * rowSize + y;
     }
 
-    boolean valid(int num)
+    public static boolean valid(int num)
     {
-        return num > 0 && num < numOfCells;
+        return num >= 0 && num < numOfCells;
     }
 
     public static int getRow(int num) {

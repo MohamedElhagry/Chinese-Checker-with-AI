@@ -1,8 +1,5 @@
 import java.lang.reflect.GenericArrayType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class StateManager
 {
@@ -31,14 +28,17 @@ public class StateManager
         ArrayList<State> result = new ArrayList<>();
         cpy(newState, state);
         for(int i=0;i<ballsSize;i++) {
-            int nodeNum;
+
+            int startingNode;
             if(isAi) {
-                nodeNum = newState.blueBalls[i];
+                startingNode = newState.blueBalls[i];
             }else{
-                nodeNum = newState.redBalls[i];
+                startingNode = newState.redBalls[i];
             }
-            if(GraphForGame.adjList[nodeNum] != null){
-                for (int neighbor : GraphForGame.adjList[nodeNum]) {
+
+            ArrayList<Integer> possibleCells = new ArrayList<Integer>();
+            if (GraphForGame.adjList[startingNode] != null) {
+                for (int neighbor : GraphForGame.adjList[startingNode]) {
                     cpy(newState, state);
                     //make sure if it's a valid state
                     if (!(find(state.blueBalls, neighbor) || find(state.redBalls, neighbor))) {
@@ -48,10 +48,56 @@ public class StateManager
                         } else {
                             newState.redBalls[i] = neighbor;
                         }
-                        result.add(new State(newState));
+                        possibleCells.add(neighbor);
                     }
                 }
             }
+
+            //BFS to find all possible moves
+            boolean[] visitedCells = new boolean[426];
+            Queue<Integer> queue = new LinkedList<Integer>();
+            queue.add(startingNode);
+            visitedCells[startingNode] = true;
+
+            if(startingNode == GraphForGame.map(15,13))
+                System.out.println("here");
+
+            while(!queue.isEmpty()) {
+                int currNode = queue.poll();
+
+                int currX = GraphForGame.getRow(currNode);
+                int currY = GraphForGame.getCol(currNode);
+
+                for (int neighbor : GraphForGame.adjList[currNode]) {
+                    if (!(find(state.blueBalls, neighbor) || find(state.redBalls, neighbor)))
+                        continue;
+
+                    int x = GraphForGame.getRow(neighbor);
+                    int y = GraphForGame.getCol(neighbor);
+                    int xDiff = x - currX;
+                    int yDiff = y - currY;
+                    int newCell = GraphForGame.map(currX + 2*xDiff, currY + 2*yDiff);
+                    if(!GraphForGame.valid(newCell) || (find(state.blueBalls, newCell) || find(state.redBalls, newCell))  || GraphForGame.nodes[newCell] == null ||  visitedCells[newCell])
+                        continue;
+
+                    visitedCells[newCell] = true;
+                    queue.add(newCell);
+                    possibleCells.add(newCell);
+                }
+            }
+
+            for(int cell:possibleCells)
+            {
+                cpy(newState, state);
+                if(isAi) {
+                    newState.blueBalls[i] = cell;
+                }else{
+                    newState.redBalls[i] = cell;
+                }
+                result.add(new State(newState));
+            }
+
+
         }
         return result;
     }
@@ -77,12 +123,23 @@ public class StateManager
     {
         new GraphForGame();
         StateManager mg = new StateManager();
+        mg.curr.blueBalls[8] = GraphForGame.map(12,14);
+        mg.curr.blueBalls[9] = GraphForGame.map(10,14);
 
-        ArrayList<State> allStates = mg.getChildren(mg.curr, false);
+        ArrayList<State> allStates = mg.getChildren(mg.curr, true);
+
+        System.out.println("here: ");
+        for(int nodeNum:mg.curr.blueBalls){
+            int x = GraphForGame.getRow(nodeNum);
+            int y = GraphForGame.getCol(nodeNum);
+            System.out.print("("+x+", "+y+") ");
+        }
+        System.out.println();
+
 
         for(State s:allStates){
-            System.out.println("red values");
-            for(int nodeNum:s.redBalls){
+            //System.out.println("red values");
+            for(int nodeNum:s.blueBalls){
                 int x = GraphForGame.getRow(nodeNum);
                 int y = GraphForGame.getCol(nodeNum);
                 System.out.print("("+x+", "+y+") ");
