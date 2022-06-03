@@ -5,11 +5,21 @@ import java.util.Comparator;
 public class State implements Comparator<State> {
     public int[] redBalls;
     public int[] blueBalls;
+    private int heuristic;
 
     State()
     {
         redBalls = new int[10];
         blueBalls = new int[10];
+        heuristic = Integer.MIN_VALUE;
+    }
+
+    int getH(){
+        return heuristic;
+    }
+
+    void setH(int val){
+        heuristic = val;
     }
 
     State(State s)
@@ -20,6 +30,7 @@ public class State implements Comparator<State> {
             this.redBalls[i] = s.redBalls[i];
             this.blueBalls[i] = s.blueBalls[i];
         }
+        this.heuristic = s.heuristic;
     }
 
     @Override

@@ -3,10 +3,10 @@ import java.util.*;
 
 public class StateManager
 {
-    State curr;
-    static final int ballsSize = 10;
-    static Set<State> open = new TreeSet<>();
-    static Set<State> closed  = new TreeSet<>();
+    private static State curr;
+    private static final int ballsSize = 10;
+    public static Set<State> open = new TreeSet<>();
+    public static Set<State> closed  = new TreeSet<>();
 
     StateManager()
     {
@@ -22,7 +22,17 @@ public class StateManager
         }
     }
 
-    ArrayList<State> getChildren(State state, boolean isAi)
+    void setState(State newState)
+    {
+        curr = newState;
+    }
+
+    State getState()
+    {
+        return curr;
+    }
+
+    public static ArrayList<State> getChildren(State state, boolean isAi)
     {
         State newState = new State();
         ArrayList<State> result = new ArrayList<>();
@@ -58,9 +68,6 @@ public class StateManager
             Queue<Integer> queue = new LinkedList<Integer>();
             queue.add(startingNode);
             visitedCells[startingNode] = true;
-
-            if(startingNode == GraphForGame.map(15,13))
-                System.out.println("here");
 
             while(!queue.isEmpty()) {
                 int currNode = queue.poll();
@@ -102,7 +109,7 @@ public class StateManager
         return result;
     }
 
-    boolean find(int[] arr, int target)
+    public static boolean find(int[] arr, int target)
     {
         for(int i=0;i<arr.length;i++){
             if(arr[i] == target){
@@ -112,7 +119,7 @@ public class StateManager
         return false;
     }
 
-    void cpy(State dest, State src){
+    public static void cpy(State dest, State src){
         for (int i=0;i<dest.redBalls.length;i++) {
             dest.redBalls[i] = src.redBalls[i];
             dest.blueBalls[i] = src.blueBalls[i];
@@ -123,12 +130,14 @@ public class StateManager
     {
         new GraphForGame();
         StateManager mg = new StateManager();
+        /*
         mg.curr.blueBalls[8] = GraphForGame.map(12,14);
         mg.curr.blueBalls[9] = GraphForGame.map(10,14);
+         */
 
         ArrayList<State> allStates = mg.getChildren(mg.curr, true);
 
-        System.out.println("here: ");
+        /*
         for(int nodeNum:mg.curr.blueBalls){
             int x = GraphForGame.getRow(nodeNum);
             int y = GraphForGame.getCol(nodeNum);
@@ -142,10 +151,11 @@ public class StateManager
             for(int nodeNum:s.blueBalls){
                 int x = GraphForGame.getRow(nodeNum);
                 int y = GraphForGame.getCol(nodeNum);
-                System.out.print("("+x+", "+y+") ");
+                //System.out.print("("+x+", "+y+") ");
             }
-            System.out.println();
+            //System.out.println();
         }
+         */
 
     }
 
