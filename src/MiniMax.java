@@ -40,7 +40,7 @@ public class MiniMax
     public int miniMax(State curr, boolean isAi, int depth)
     {
         //todo associate with open and close list to prevent infinite behaviour
-        if(depth == 0) return 0;
+        if(depth == 0) return curr.getH();
         ArrayList<State> children = StateManager.getChildren(curr, isAi);
         State best;
         if(isAi)  best = getMaxChild(children);
@@ -49,12 +49,12 @@ public class MiniMax
         if(isAi){
             ret = Integer.MIN_VALUE;
             for(State child:children){
-                ret = Math.max(ret, miniMax(child, !isAi, depth-1));
+                ret = Math.max(ret, best.getH()+miniMax(child, !isAi, depth-1));
             }
         }else{
             ret = Integer.MAX_VALUE;
             for(State child:children){
-                ret = Math.min(ret, miniMax(child, !isAi, depth-1));
+                ret = Math.min(ret, best.getH()+miniMax(child, !isAi, depth-1));
             }
         }
         return ret;
