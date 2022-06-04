@@ -176,13 +176,17 @@ public class State implements Comparable<State> {
             int col = Graph.getCol(num);
             redUtility += manhattanDistance(row, col, destRow, destCol);
         }
-
+        return blueUtility;
         //the more positive the more ability to win
         // we subtract the blueUtility because the less distance between the AI and the target the better
         // we add the redUtility because the more distance between the opponent and the target the better
+        /*
         int utility = redUtility-blueUtility;
+
         this.setUtillity(utility);
         return utility;
+
+         */
     }
 
     @Override

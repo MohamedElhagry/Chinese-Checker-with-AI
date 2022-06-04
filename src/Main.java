@@ -4,10 +4,13 @@ public class Main
 {
     public static void main(String[] args)
     {
-        new GraphForGame();
-        StateManager mg = new StateManager();
+        new Graph();
+        GameManager gameManager = new GameManager();
+        StateManager.curr = State.getInitialState();
+        GUI gui = new GUI();
+        gameManager.gui=gui;
+        gameManager.startGame();
 
-        new GUI();
 
     }
 }

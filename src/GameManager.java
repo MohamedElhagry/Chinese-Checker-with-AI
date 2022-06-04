@@ -2,11 +2,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GameManager {
+    GUI gui;
 
     void startGame()
     {
         State state = State.getInitialState();
-        play(state,3);
+
+        play(state,5);
     }
 
     void play(State state, int depth)
@@ -26,7 +28,10 @@ public class GameManager {
                 AITurn = false;
             }
             else{
-                state.printState();
+                //state.printState();
+                StateManager.curr = state;
+                gui.reDraw();
+
                 System.out.println("Please enter your move");
 
 
