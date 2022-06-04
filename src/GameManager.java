@@ -37,7 +37,7 @@ public class GameManager {
                 x2 = sc.nextInt();
                 y2 = sc.nextInt();
 
-                ArrayList<StateManager.Move> possibleMoves = StateManager.getValidMoves(state);
+                ArrayList<StateManager.Move> possibleMoves = StateManager.getValidMoves(state, false);
                 boolean validMove = false;
                 for(StateManager.Move move : possibleMoves)
                 {
@@ -47,6 +47,12 @@ public class GameManager {
                         break;
                     }
                 }
+                for(StateManager.Move move : possibleMoves)
+                {
+                    move.print();
+                }
+
+
                 if(validMove){
                     state.doMove(x1,y1,x2,y2);
                     AITurn = true;

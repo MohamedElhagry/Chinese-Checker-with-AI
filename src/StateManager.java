@@ -29,6 +29,9 @@ public class StateManager
             this.x2 = x2;
             this.y2 = y2;
         }
+        public void print(){
+            System.out.println("Possible Move : ("+ x1 + "," + y1 + ") --> (" +  x2 + "," +y2 + ")");
+        }
     }
 
     public static ArrayList<State> getChildren(State state, boolean isAi)
@@ -58,7 +61,6 @@ public class StateManager
             //BFS to find all possible moves
             boolean[] visitedCells = new boolean[426];
             Queue<Integer> queue = new LinkedList<Integer>();
-
             queue.add(startingNode);
             visitedCells[startingNode] = true;
 
@@ -102,14 +104,19 @@ public class StateManager
         return result;
     }
 
-    public static ArrayList<Move> getValidMoves(State state)
+    public static ArrayList<Move> getValidMoves(State state, boolean isAi)
     {
         State newState = new State(state);
         ArrayList<Move> result = new ArrayList<>();
 
         for(int i=0;i<ballsSize;i++) {
 
-            int startingNode = newState.redBalls[i];
+            int startingNode;
+            if(isAi) {
+                startingNode = newState.blueBalls[i];
+            }else{
+                startingNode = newState.redBalls[i];
+            }
 
             if (Graph.adjList[startingNode] != null) {
                 int sourceRow = Graph.getRow(startingNode);
@@ -121,7 +128,6 @@ public class StateManager
                     //make sure if it's a valid state
                     if (!(Utilities.find(state.blueBalls, neighbor) || Utilities.find(state.redBalls, neighbor))) {
 
-                        newState.redBalls[i] = neighbor;
                         result.add(new Move(sourceRow, sourceCol, destRow, destCol));
                     }
                 }
@@ -132,6 +138,8 @@ public class StateManager
             Queue<Integer> queue = new LinkedList<Integer>();
             queue.add(startingNode);
             visitedCells[startingNode] = true;
+            int startRow = Graph.getRow(startingNode);
+            int startCol = Graph.getCol(startingNode);
 
             while(!queue.isEmpty()) {
                 int currNode = queue.poll();
@@ -156,7 +164,7 @@ public class StateManager
 
                     visitedCells[newCell] = true;
                     queue.add(newCell);
-                    result.add(new Move(currRow, currCol, destRow, destCol));
+                    result.add(new Move(startRow, startCol, destRow, destCol));
                 }
             }
 
@@ -177,13 +185,26 @@ public class StateManager
         new Graph();
         StateManager mg = new StateManager();
 
-        /*
-        ArrayList<Move> moves = mg.getValidMoves(mg.curr);
+        mg.curr.redBalls =
+                new int[]{
+                        Graph.map(0, 12),
+                        Graph.map(1, 11),
+                        Graph.map(1, 13),
+                        Graph.map(2, 10),
+                        Graph.map(2, 12),
+                        Graph.map(2, 14),
+                        Graph.map(3, 13),
+                        Graph.map(3, 15),
+                        Graph.map(4, 8),
+                        Graph.map(4, 10)
+                };
+
+        ArrayList<Move> moves = mg.getValidMoves(mg.curr, true);
         for(Move move:moves)
         {
             System.out.println("("+ move.x1 + "," + move.y1 + ") --> (" +  move.x2 + "," + move.y2 + ")");
         }
-        */
+
 
 
         //ArrayList<State> allStates = mg.getChildren(mg.curr, true);
