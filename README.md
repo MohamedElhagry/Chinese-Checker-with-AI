@@ -41,7 +41,10 @@ click on its own so you can just play with the mouse.
 
 
 ## Screenshots:
-![Screen1](Images/Screenshot 1.png)
-![Screen2](Images/Screenshot 2.png)
+![screenshot](Images/Screenshot 1.png)
+![screenshot](Images/Screenshot 2.png)
+![screenshot](Images/gameplay 1.png)
+![screenshot](Images/gameplay 2.png)
+
 
 
