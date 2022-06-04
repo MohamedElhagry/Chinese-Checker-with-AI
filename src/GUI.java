@@ -1,17 +1,22 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 
-public class GUI extends JFrame implements MouseListener {
+public class GUI extends JFrame implements ActionListener
+{
     public static int clickCounter = 0;
+    public static boolean gameOver = false;
     public static int[] clicks = {0, 0, 0, 0};
     public static final int SCREEN_WIDTH = 1000;
     public static final int SCREEN_HEIGHT = 680;
     public static final int CIRCLE_SIZE = 40;
     ArrayList<Integer> moves;
+    JButton b_easyButton =new JButton("Easy");
+    JButton b_mediumButton =new JButton("Medium");
+    JButton b_hardButton =new JButton("Hard");
+
+
 
     GUI() {
         this.setResizable(false);
@@ -21,12 +26,27 @@ public class GUI extends JFrame implements MouseListener {
         this.setLayout(null);
         this.setVisible(true);
         clickCounter = 0;
+        b_easyButton.setBounds(600,10,100,40);
+        b_easyButton.setFont(new Font("Arial", Font.PLAIN, 15));
+        b_easyButton.addActionListener(this);
+        this.add(b_easyButton);
+        b_mediumButton.setBounds(750,10,100,40);
+        b_mediumButton.addActionListener(this);
+        this.add(b_mediumButton);
+        b_hardButton.setBounds(900,10,100,40);
+        b_hardButton.addActionListener(this);
+        b_hardButton.setFont(new Font("Arial", Font.PLAIN, 15));
+
+        this.add(b_hardButton);
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
+                if(gameOver) return;
+
                 Point lastClick = new Point(mouseEvent.getX(), mouseEvent.getY());
                 Point actualPoint = new Point(invMap(lastClick));
-                System.out.println("Clicked on " + actualPoint.x + ", " + actualPoint.y);
+                //System.out.println("Clicked on " + actualPoint.x + ", " + actualPoint.y);
                 if (Utilities.find(StateManager.curr.redBalls, Graph.map(actualPoint.x, actualPoint.y))) {
 
                     clicks[0] = actualPoint.x;
@@ -53,9 +73,10 @@ public class GUI extends JFrame implements MouseListener {
 
 
                     // AI plays
-                    GameManager.checkwinning();
+                    showWinText(GameManager.checkwinning());
                     GameManager.AIPlay();
                     reDraw();
+                    showWinText(GameManager.checkwinning());
                 }
             }
         });
@@ -63,6 +84,29 @@ public class GUI extends JFrame implements MouseListener {
 
     }
 
+
+    public void showWinText(int status)
+    {
+
+        if (status == -1)
+        {
+            gameOver =true;
+            JLabel l_uWin = new JLabel("You Win");
+            l_uWin.setFont(new Font("Arial", Font.PLAIN, 24));
+            l_uWin.setForeground(Color.PINK);
+            l_uWin.setBounds(20,20,100,30);
+            this.add(l_uWin);
+        }
+        else if (status == 1)
+        {
+            gameOver =true;
+            JLabel l_aiWins = new JLabel("AI Wins");
+            l_aiWins.setFont(new Font("Arial", Font.PLAIN, 24));
+            l_aiWins.setForeground(Color.CYAN);
+            l_aiWins.setBounds(20,20,100,30);
+            this.add(l_aiWins);
+        }
+    }
 
     public void reDraw() {
         this.repaint();
@@ -135,29 +179,25 @@ public class GUI extends JFrame implements MouseListener {
         return new Point(newX, newY);
     }
 
-    @Override
-    public void mouseClicked(MouseEvent mouseEvent) {
-
-
-    }
 
     @Override
-    public void mousePressed(MouseEvent mouseEvent) {
-
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource() == b_easyButton)
+        {
+            GameManager.depth = 1;
+            System.out.println("Changed difficulty to easy");
+        }
+        else if (e.getSource() == b_mediumButton)
+        {
+            GameManager.depth = 3;
+            System.out.println("Changed difficulty to medium");
+        }
+        else if(e.getSource() == b_hardButton)
+        {
+            GameManager.depth = 5;
+            System.out.println("Changed difficulty to hard");
+        }
     }
 
-    @Override
-    public void mouseReleased(MouseEvent mouseEvent) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent mouseEvent) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent mouseEvent) {
-
-    }
 }

@@ -6,9 +6,9 @@ public class GameManager {
     static int depth;
 
     void startGame() {
+        depth = 3;
         StateManager.curr = State.getInitialState();
-
-        play(3);
+        play();
     }
 
     public static ArrayList<StateManager.Move> getPlayerMove() {
@@ -16,8 +16,7 @@ public class GameManager {
         return possibleMoves;
     }
 
-    void play(int d) {
-        this.depth = d;
+    void play() {
         intelligence = new MiniMax();
 
         System.out.println("Please enter your move like so : ");
@@ -27,15 +26,17 @@ public class GameManager {
     }
 
     static void AIPlay() {
+        System.out.println("Applying depth= "+ depth);
         StateManager.curr = intelligence.miniMax(StateManager.curr, true, depth);
     }
 
-    static void checkwinning() {
+    static int checkwinning() {
         int status = StateManager.curr.isWin();
         if (status == -1)
             System.out.println("Congratulations, the player won!");
         else if (status == 1)
             System.out.println("The AI won this time.");
+        return status;
     }
 
     public static void main(String[] args) {

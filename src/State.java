@@ -127,8 +127,9 @@ public class State implements Comparable<State> {
     public int calcUtility() {
         int blueUtility = 0;
         //destination for AI
-        int destRow = 2;
+        int destRow = 0;
         int destCol = 12;
+
 
         for (int i = 0; i < 10; i++) {
             if (!Utilities.find(blueBalls, topTriangle[i]) && !Utilities.find(redBalls, topTriangle[i])) {
@@ -138,10 +139,14 @@ public class State implements Comparable<State> {
             }
         }
 
+
+
         for (int num : this.blueBalls) {
             int row = Graph.getRow(num);
             int col = Graph.getCol(num);
-            blueUtility += manhattanDistance(row, col, destRow, destCol);
+            if(Utilities.find(topTriangle,num))
+                blueUtility -= 100;
+            blueUtility += (2 * row + Math.abs(col-destCol));
         }
 
 
@@ -167,10 +172,11 @@ public class State implements Comparable<State> {
         // we subtract the blueUtility because the less distance between the AI and the target the better
         // we add the redUtility because the more distance between the opponent and the target the better
 
-        int utility = redUtility - blueUtility;
+        int utility = -blueUtility;
 
         this.setUtillity(utility);
         return utility;
+
 
     }
 
