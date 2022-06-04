@@ -43,16 +43,16 @@ public class StateManager
 
             int startingNode;
             if(isAi) {
-                startingNode = newState.blueBalls[i];
+                startingNode = newState.blueMarbles[i];
             }else{
-                startingNode = newState.redBalls[i];
+                startingNode = newState.redMarbles[i];
             }
 
             ArrayList<Integer> possibleCells = new ArrayList<Integer>();
             if (Graph.adjList[startingNode] != null) {
                 for (int neighbor : Graph.adjList[startingNode]) {
                     //make sure if it's a valid state
-                    if (!(Utilities.find(state.blueBalls, neighbor) || Utilities.find(state.redBalls, neighbor))) {
+                    if (!(Utilities.find(state.blueMarbles, neighbor) || Utilities.find(state.redMarbles, neighbor))) {
                         possibleCells.add(neighbor);
                     }
                 }
@@ -71,7 +71,7 @@ public class StateManager
                 int currY = Graph.getCol(currNode);
 
                 for (int neighbor : Graph.adjList[currNode]) {
-                    if (!(Utilities.find(state.blueBalls, neighbor) || Utilities.find(state.redBalls, neighbor)))
+                    if (!(Utilities.find(state.blueMarbles, neighbor) || Utilities.find(state.redMarbles, neighbor)))
                         continue;
 
                     int x = Graph.getRow(neighbor);
@@ -79,7 +79,7 @@ public class StateManager
                     int xDiff = x - currX;
                     int yDiff = y - currY;
                     int newCell = Graph.map(currX + 2*xDiff, currY + 2*yDiff);
-                    if(!Graph.valid(newCell) || (Utilities.find(state.blueBalls, newCell) || Utilities.find(state.redBalls, newCell))  || Graph.nodes[newCell] == null ||  visitedCells[newCell])
+                    if(!Graph.valid(newCell) || (Utilities.find(state.blueMarbles, newCell) || Utilities.find(state.redMarbles, newCell))  || Graph.nodes[newCell] == null ||  visitedCells[newCell])
                         continue;
 
                     visitedCells[newCell] = true;
@@ -92,9 +92,9 @@ public class StateManager
             {
                 cpy(newState, state);
                 if(isAi) {
-                    newState.blueBalls[i] = cell;
+                    newState.blueMarbles[i] = cell;
                 }else{
-                    newState.redBalls[i] = cell;
+                    newState.redMarbles[i] = cell;
                 }
                 result.add(new State(newState));
             }
@@ -113,9 +113,9 @@ public class StateManager
 
             int startingNode;
             if(isAi) {
-                startingNode = newState.blueBalls[i];
+                startingNode = newState.blueMarbles[i];
             }else{
-                startingNode = newState.redBalls[i];
+                startingNode = newState.redMarbles[i];
             }
 
             if (Graph.adjList[startingNode] != null) {
@@ -126,7 +126,7 @@ public class StateManager
                     int destCol = Graph.getCol(neighbor);
                     cpy(newState, state);
                     //make sure if it's a valid state
-                    if (!(Utilities.find(state.blueBalls, neighbor) || Utilities.find(state.redBalls, neighbor))) {
+                    if (!(Utilities.find(state.blueMarbles, neighbor) || Utilities.find(state.redMarbles, neighbor))) {
 
                         result.add(new Move(sourceRow, sourceCol, destRow, destCol));
                     }
@@ -148,7 +148,7 @@ public class StateManager
                 int currCol = Graph.getCol(currNode);
 
                 for (int neighbor : Graph.adjList[currNode]) {
-                    if (!(Utilities.find(state.blueBalls, neighbor) || Utilities.find(state.redBalls, neighbor)))
+                    if (!(Utilities.find(state.blueMarbles, neighbor) || Utilities.find(state.redMarbles, neighbor)))
                         continue;
 
                     int x = Graph.getRow(neighbor);
@@ -159,7 +159,7 @@ public class StateManager
                     int destCol = currCol + 2*yDiff;
 
                     int newCell = Graph.map(destRow, destCol);
-                    if(!Graph.valid(newCell) || (Utilities.find(state.blueBalls, newCell) || Utilities.find(state.redBalls, newCell))  || Graph.nodes[newCell] == null ||  visitedCells[newCell])
+                    if(!Graph.valid(newCell) || (Utilities.find(state.blueMarbles, newCell) || Utilities.find(state.redMarbles, newCell))  || Graph.nodes[newCell] == null ||  visitedCells[newCell])
                         continue;
 
                     visitedCells[newCell] = true;
@@ -173,19 +173,21 @@ public class StateManager
     }
 
     public static void cpy(State dest, State src){
-        for (int i=0;i<dest.redBalls.length;i++) {
-            dest.redBalls[i] = src.redBalls[i];
-            dest.blueBalls[i] = src.blueBalls[i];
+        for (int i = 0; i<dest.redMarbles.length; i++) {
+            dest.redMarbles[i] = src.redMarbles[i];
+            dest.blueMarbles[i] = src.blueMarbles[i];
         }
         dest.setUtillity(src.getUtility());
     }
 
+    /*
     public static void main(String[] args)
+
     {
         new Graph();
         StateManager mg = new StateManager();
 
-        mg.curr.redBalls =
+        mg.curr.redMarbles =
                 new int[]{
                         Graph.map(0, 12),
                         Graph.map(1, 11),
@@ -204,41 +206,8 @@ public class StateManager
         {
             System.out.println("("+ move.x1 + "," + move.y1 + ") --> (" +  move.x2 + "," + move.y2 + ")");
         }
-
-
-
-        //ArrayList<State> allStates = mg.getChildren(mg.curr, true);
-
-    /*
-        mg.curr.setRedBalls(4, GraphForGame.map(5,5));
-        mg.curr.setRedBalls(6, GraphForGame.map(4,18));
-
-        mg.curr.setBlueBalls(4, GraphForGame.map(5,7));
-        mg.curr.setBlueBalls(6, GraphForGame.map(6,10));
-        mg.curr.setBlueBalls(7, GraphForGame.map(7,17));
-
-        System.out.println(mg.curr.getUtility());
-
-        for(int nodeNum:mg.curr.blueBalls){
-            int x = GraphForGame.getRow(nodeNum);
-            int y = GraphForGame.getCol(nodeNum);
-            System.out.print("("+x+", "+y+") ");
-        }
-        System.out.println();
-        System.out.println("-------------------------");
-
-
-        for(State s:allStates){
-            System.out.println("red values");
-            for(int nodeNum:s.blueBalls){
-                int x = GraphForGame.getRow(nodeNum);
-                int y = GraphForGame.getCol(nodeNum);
-                System.out.print("("+x+", "+y+") ");
-            }
-            System.out.println();
-        }
-    */
-
     }
+
+     */
 
 }

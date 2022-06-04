@@ -1,8 +1,4 @@
-import com.sun.source.tree.Tree;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
 import java.util.TreeSet;
 
 public class MiniMax
@@ -13,20 +9,16 @@ public class MiniMax
     {
         visitedList =  new TreeSet<>();
     }
-
-    //assume AI always plays first
-
-
     public State miniMax(State curr, boolean isAi, int depth)
     {
         if(depth == 0) return curr;
-
         ArrayList<State> children = StateManager.getChildren(curr, isAi);
         for(State state:children)
             state.calcUtility();
         State best = curr;
         int bestUtility;
-        if(isAi){
+        if(isAi)
+        {
             bestUtility = Integer.MIN_VALUE;
             for(State child:children){
 
@@ -36,7 +28,9 @@ public class MiniMax
                     best = child;
                 }
             }
-        }else{
+        }
+        else
+        {
             bestUtility = Integer.MAX_VALUE;
             for(State child:children){
                 State temp = miniMax(child, !isAi, depth-1);
@@ -46,30 +40,9 @@ public class MiniMax
                 }
             }
         }
-
         return best;
     }
-
-    public static void tellMe(int[] prev, int [] now)
-    {
-//        Arrays.sort(prev);
-//        Arrays.sort(now);
-        for(int i=0; i<10; i++)
-
-        {
-            if(prev[i] != now[i])
-            {
-                int x1 = Graph.getRow(prev[i]);
-                int y1 = Graph.getCol(prev[i]);
-                int x2 = Graph.getRow(now[i]);
-                int y2 = Graph.getCol(now[i]);
-
-                System.out.println("("+ x1 + "," + y1 + ") --> (" + x2 + "," + y2 + ")");
-
-            }
-        }
-    }
-
+    /*
     public static void main(String[] args) {
         new Graph();
 
@@ -103,15 +76,16 @@ public class MiniMax
         MiniMax miniMax = new MiniMax();
 
         State bestChild = miniMax.miniMax(state, true, 1);
-        tellMe(state.blueBalls, bestChild.blueBalls);
+        Utilities.tellMe(state.blueMarbles, bestChild.blueMarbles);
         System.out.println();
 
         State winnn = miniMax.miniMax(new State(bestChild), true, 1);
-        tellMe(bestChild.blueBalls, winnn.blueBalls);
+        Utilities.tellMe(bestChild.blueMarbles, winnn.blueMarbles);
 
 
         System.out.println();
         winnn.print();
     }
+     */
 
 }

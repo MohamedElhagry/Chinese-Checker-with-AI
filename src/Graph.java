@@ -5,22 +5,18 @@ enum nodeState {
 }
 
 public class Graph {
-
     public class Node {
         nodeState state;
         int x, y;
         int num;
-
         Node(int x, int y, nodeState state) {
             this.x = x;
             this.y = y;
             num = map(x, y);
         }
-
         void print() {
             System.out.println(state.toString() + " " + x + " " + y);
         }
-
     }
 
     static int numOfCells = 426;
@@ -39,7 +35,9 @@ public class Graph {
 
     void link(int a, int b) {
         if(adjList[a] == null)
+        {
             adjList[a] = new ArrayList<>();
+        }
         adjList[a].add(b);
     }
 
@@ -63,8 +61,7 @@ public class Graph {
     void InitializeNodes() {
         int numOfNodes;
         int start;
-        int redI = 0;
-        int blueI = 0;
+
 
         //Initialization of player triangle
         numOfNodes = 1;
@@ -141,19 +138,18 @@ public class Graph {
                 continue;
             node.print();
 
-            //ArrayList<Integer> neighbours = adjList ;
-
             for( int neighbour: adjList[node.num])
                 System.out.print(getRow(neighbour) + " " + getCol(neighbour) + " -- ");
             System.out.println();
         }
     }
 
+    /*
     public static void main(String[] args)
     {
         Graph graph = new Graph();
-        //graph.printNodes();
     }
+     */
 
 
 }

@@ -46,8 +46,7 @@ public class GUI extends JFrame implements ActionListener
 
                 Point lastClick = new Point(mouseEvent.getX(), mouseEvent.getY());
                 Point actualPoint = new Point(invMap(lastClick));
-                //System.out.println("Clicked on " + actualPoint.x + ", " + actualPoint.y);
-                if (Utilities.find(StateManager.curr.redBalls, Graph.map(actualPoint.x, actualPoint.y))) {
+                if (Utilities.find(StateManager.curr.redMarbles, Graph.map(actualPoint.x, actualPoint.y))) {
 
                     clicks[0] = actualPoint.x;
                     clicks[1] = actualPoint.y;
@@ -70,8 +69,6 @@ public class GUI extends JFrame implements ActionListener
                     StateManager.curr.doMove(clicks[0], clicks[1], clicks[2], clicks[3]);
                     moves = new ArrayList<>();
                     reDraw();
-
-
                     // AI plays
                     showWinText(GameManager.checkwinning());
                     GameManager.AIPlay();
@@ -80,14 +77,10 @@ public class GUI extends JFrame implements ActionListener
                 }
             }
         });
-
-
     }
-
 
     public void showWinText(int status)
     {
-
         if (status == -1)
         {
             gameOver =true;
@@ -111,37 +104,27 @@ public class GUI extends JFrame implements ActionListener
     public void reDraw() {
         this.repaint();
     }
-
-
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D graphics2D = (Graphics2D) g;
-
 
         //Draw board
         for (Graph.Node node : Graph.nodes) {
             g.setColor(Color.WHITE);
             if (node == null) continue;
             Point position = new Point(map(Graph.getCol(node.num), Graph.getRow(node.num)));
-
-//            if (Utilities.find(StateManager.curr.redBalls, node.num)) {
-//                g.setColor(Color.RED);
-//            } else if (Utilities.find(StateManager.curr.blueBalls, node.num)) {
-//                g.setColor(Color.BLUE);
-//            } else if (find(moves, node.num)) g.setColor(Color.YELLOW);
-
             g.fillOval(position.x, position.y, CIRCLE_SIZE, CIRCLE_SIZE);
         }
 
         g.setColor(Color.RED);
         for (int i = 0; i < 10; i++) {
-            Point position = new Point(map(Graph.getCol(StateManager.curr.redBalls[i]), Graph.getRow(StateManager.curr.redBalls[i])));
+            Point position = new Point(map(Graph.getCol(StateManager.curr.redMarbles[i]), Graph.getRow(StateManager.curr.redMarbles[i])));
             g.fillOval(position.x, position.y, CIRCLE_SIZE, CIRCLE_SIZE);
         }
 
         g.setColor(Color.BLUE);
         for (int i = 0; i < 10; i++) {
-            Point position = new Point(map(Graph.getCol(StateManager.curr.blueBalls[i]), Graph.getRow(StateManager.curr.blueBalls[i])));
+            Point position = new Point(map(Graph.getCol(StateManager.curr.blueMarbles[i]), Graph.getRow(StateManager.curr.blueMarbles[i])));
             g.fillOval(position.x, position.y, CIRCLE_SIZE, CIRCLE_SIZE);
         }
 
@@ -199,5 +182,4 @@ public class GUI extends JFrame implements ActionListener
             System.out.println("Changed difficulty to hard");
         }
     }
-
 }

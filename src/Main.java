@@ -10,7 +10,5 @@ public class Main
         GUI gui = new GUI();
         gameManager.gui=gui;
         gameManager.startGame();
-
-
     }
 }
