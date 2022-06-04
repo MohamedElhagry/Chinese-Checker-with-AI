@@ -49,13 +49,12 @@ public class GUI extends JFrame implements MouseListener {
 
                     StateManager.curr.doMove(clicks[0], clicks[1], clicks[2], clicks[3]);
                     moves = new ArrayList<>();
-
                     reDraw();
 
 
                     // AI plays
                     GameManager.checkwinning();
-                    GameManager.switchTurn();
+                    GameManager.AIPlay();
                     reDraw();
                 }
             }
@@ -80,12 +79,37 @@ public class GUI extends JFrame implements MouseListener {
             g.setColor(Color.WHITE);
             if (node == null) continue;
             Point position = new Point(map(Graph.getCol(node.num), Graph.getRow(node.num)));
-            if (Utilities.find(StateManager.curr.redBalls, node.num)) g.setColor(Color.RED);
-            else if (Utilities.find(StateManager.curr.blueBalls, node.num)) g.setColor(Color.BLUE);
-            else if (find(moves, node.num)) g.setColor(Color.YELLOW);
+
+//            if (Utilities.find(StateManager.curr.redBalls, node.num)) {
+//                g.setColor(Color.RED);
+//            } else if (Utilities.find(StateManager.curr.blueBalls, node.num)) {
+//                g.setColor(Color.BLUE);
+//            } else if (find(moves, node.num)) g.setColor(Color.YELLOW);
 
             g.fillOval(position.x, position.y, CIRCLE_SIZE, CIRCLE_SIZE);
         }
+
+        g.setColor(Color.RED);
+        for (int i = 0; i < 10; i++) {
+            Point position = new Point(map(Graph.getCol(StateManager.curr.redBalls[i]), Graph.getRow(StateManager.curr.redBalls[i])));
+            g.fillOval(position.x, position.y, CIRCLE_SIZE, CIRCLE_SIZE);
+        }
+
+        g.setColor(Color.BLUE);
+        for (int i = 0; i < 10; i++) {
+            Point position = new Point(map(Graph.getCol(StateManager.curr.blueBalls[i]), Graph.getRow(StateManager.curr.blueBalls[i])));
+            g.fillOval(position.x, position.y, CIRCLE_SIZE, CIRCLE_SIZE);
+        }
+
+        if (moves == null)
+            return;
+
+        g.setColor(Color.YELLOW);
+        for (Integer m : moves) {
+            Point position = new Point(map(Graph.getCol(m), Graph.getRow(m)));
+            g.fillOval(position.x, position.y, CIRCLE_SIZE, CIRCLE_SIZE);
+        }
+
     }
 
     boolean find(ArrayList<Integer> moves, int num) {

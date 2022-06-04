@@ -12,7 +12,7 @@ public class GameManager {
     }
 
     public static ArrayList<StateManager.Move> getPlayerMove() {
-        ArrayList<StateManager.Move> possibleMoves = StateManager.getValidMoves(StateManager.curr);
+        ArrayList<StateManager.Move> possibleMoves = StateManager.getValidMoves(StateManager.curr, false);
         return possibleMoves;
     }
 
@@ -26,7 +26,7 @@ public class GameManager {
 
     }
 
-    static void switchTurn() {
+    static void AIPlay() {
         StateManager.curr = intelligence.miniMax(StateManager.curr, true, depth);
     }
 
