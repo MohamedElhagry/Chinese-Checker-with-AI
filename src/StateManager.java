@@ -20,7 +20,7 @@ public class StateManager
         return curr;
     }
 
-    class Move {
+    static class Move {
         int x1, y1, x2, y2;
         Move(int x1, int y1, int x2, int y2)
         {
@@ -49,7 +49,7 @@ public class StateManager
             if (Graph.adjList[startingNode] != null) {
                 for (int neighbor : Graph.adjList[startingNode]) {
                     //make sure if it's a valid state
-                    if (!(find(state.blueBalls, neighbor) || find(state.redBalls, neighbor))) {
+                    if (!(Utilities.find(state.blueBalls, neighbor) || Utilities.find(state.redBalls, neighbor))) {
                         possibleCells.add(neighbor);
                     }
                 }
@@ -69,7 +69,7 @@ public class StateManager
                 int currY = Graph.getCol(currNode);
 
                 for (int neighbor : Graph.adjList[currNode]) {
-                    if (!(find(state.blueBalls, neighbor) || find(state.redBalls, neighbor)))
+                    if (!(Utilities.find(state.blueBalls, neighbor) || Utilities.find(state.redBalls, neighbor)))
                         continue;
 
                     int x = Graph.getRow(neighbor);
@@ -77,7 +77,7 @@ public class StateManager
                     int xDiff = x - currX;
                     int yDiff = y - currY;
                     int newCell = Graph.map(currX + 2*xDiff, currY + 2*yDiff);
-                    if(!Graph.valid(newCell) || (find(state.blueBalls, newCell) || find(state.redBalls, newCell))  || Graph.nodes[newCell] == null ||  visitedCells[newCell])
+                    if(!Graph.valid(newCell) || (Utilities.find(state.blueBalls, newCell) || Utilities.find(state.redBalls, newCell))  || Graph.nodes[newCell] == null ||  visitedCells[newCell])
                         continue;
 
                     visitedCells[newCell] = true;
@@ -102,7 +102,7 @@ public class StateManager
         return result;
     }
 
-    public ArrayList<Move> getValidMoves(State state)
+    public static ArrayList<Move> getValidMoves(State state)
     {
         State newState = new State(state);
         ArrayList<Move> result = new ArrayList<>();
@@ -119,7 +119,7 @@ public class StateManager
                     int destCol = Graph.getCol(neighbor);
                     cpy(newState, state);
                     //make sure if it's a valid state
-                    if (!(find(state.blueBalls, neighbor) || find(state.redBalls, neighbor))) {
+                    if (!(Utilities.find(state.blueBalls, neighbor) || Utilities.find(state.redBalls, neighbor))) {
 
                         newState.redBalls[i] = neighbor;
                         result.add(new Move(sourceRow, sourceCol, destRow, destCol));
@@ -140,7 +140,7 @@ public class StateManager
                 int currCol = Graph.getCol(currNode);
 
                 for (int neighbor : Graph.adjList[currNode]) {
-                    if (!(find(state.blueBalls, neighbor) || find(state.redBalls, neighbor)))
+                    if (!(Utilities.find(state.blueBalls, neighbor) || Utilities.find(state.redBalls, neighbor)))
                         continue;
 
                     int x = Graph.getRow(neighbor);
@@ -151,7 +151,7 @@ public class StateManager
                     int destCol = currCol + 2*yDiff;
 
                     int newCell = Graph.map(destRow, destCol);
-                    if(!Graph.valid(newCell) || (find(state.blueBalls, newCell) || find(state.redBalls, newCell))  || Graph.nodes[newCell] == null ||  visitedCells[newCell])
+                    if(!Graph.valid(newCell) || (Utilities.find(state.blueBalls, newCell) || Utilities.find(state.redBalls, newCell))  || Graph.nodes[newCell] == null ||  visitedCells[newCell])
                         continue;
 
                     visitedCells[newCell] = true;
@@ -162,16 +162,6 @@ public class StateManager
 
         }
         return result;
-    }
-
-    public static boolean find(int[] arr, int target)
-    {
-        for(int i=0;i<arr.length;i++){
-            if(arr[i] == target){
-                return true;
-            }
-        }
-        return false;
     }
 
     public static void cpy(State dest, State src){

@@ -8,7 +8,6 @@ import java.util.TreeSet;
 public class MiniMax
 {
     TreeSet<State> visitedList;
-    boolean AITurn;
 
     MiniMax()
     {
@@ -20,7 +19,6 @@ public class MiniMax
 
     public State miniMax(State curr, boolean isAi, int depth)
     {
-        //todo associate with open and close list to prevent infinite behaviour
         if(depth == 0) return curr;
 
         ArrayList<State> children = StateManager.getChildren(curr, isAi);
@@ -33,18 +31,18 @@ public class MiniMax
             for(State child:children){
 
                 State temp = miniMax(child, !isAi, depth-1);
-                if(temp.getUtility() >= bestUtility){
+                if(temp.getUtility() > bestUtility){
                     bestUtility = temp.getUtility();
-                    best = temp;
+                    best = child;
                 }
             }
         }else{
             bestUtility = Integer.MAX_VALUE;
             for(State child:children){
                 State temp = miniMax(child, !isAi, depth-1);
-                if(temp.getUtility() <= bestUtility){
+                if(temp.getUtility() < bestUtility){
                     bestUtility = temp.getUtility();
-                    best = temp;
+                    best = child;
                 }
             }
         }
@@ -102,18 +100,18 @@ public class MiniMax
 
         State state = new State(red, blue);
         StateManager.getChildren(state, true);
-
         MiniMax miniMax = new MiniMax();
-        State bestChild = miniMax.miniMax(state, true, 3);
+
+        State bestChild = miniMax.miniMax(state, true, 1);
         tellMe(state.blueBalls, bestChild.blueBalls);
         System.out.println();
 
-
-
         State winnn = miniMax.miniMax(new State(bestChild), true, 1);
-//        tellMe(bestChild.blueBalls, winnn.blueBalls);
-        System.out.println();
+        tellMe(bestChild.blueBalls, winnn.blueBalls);
 
+
+        System.out.println();
+        winnn.print();
     }
 
 }

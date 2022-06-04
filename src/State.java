@@ -65,24 +65,14 @@ public class State implements Comparable<State> {
         return new State(red, blue);
     }
 
-    boolean equal(int []a, int []b)
-    {
-        Arrays.sort(b);
-        for(int i=0; i<a.length; i++)
-            if(a[i] != b[i])
-                return false;
-
-        return true;
-    }
-
     public int isWin()
     {
         //AI wins
-        if(equal(topTriangle, this.blueBalls))
+        if(Utilities.equal(topTriangle, this.blueBalls))
             return 1;
 
         //Player wins
-        if(equal(downTriangle, this.redBalls))
+        if(Utilities.equal(downTriangle, this.redBalls))
             return -1;
 
         //game still in progress
@@ -109,6 +99,28 @@ public class State implements Comparable<State> {
         this.utility = this.calcUtility();
     }
 
+    void doMove(int x1,int y1,int x2, int y2)
+    {
+        int targetNum = Graph.map(x1,y1);
+        for(int i=0; i<10; i++)
+        {
+            if(targetNum == redBalls[i]){
+                redBalls[i] = Graph.map(x2,y2);
+                break;
+            }
+        }
+    }
+
+    public void printState()
+    {
+        System.out.println("The player's marbles are in cells:");
+        for(int i=0; i<10; i++)
+            System.out.println("(" + Graph.getRow(redBalls[i]) + "," + Graph.getCol(redBalls[i]) + ")");
+        System.out.println("The AI marbles are in cells:");
+        for(int i=0; i<10; i++)
+            System.out.println("(" + Graph.getRow(blueBalls[i]) + "," + Graph.getCol(blueBalls[i]) + ")");
+    }
+
     public void print()
     {
         for(int i=0; i<10; i++)
@@ -125,23 +137,39 @@ public class State implements Comparable<State> {
     {
         int blueUtility = 0;
         //destination for AI
-        int destRow = 0, destCol = 12;
-        for(int i=0; i<10; i++){
-            if(!(StateManager.find(blueBalls, topTriangle[i]) || StateManager.find(redBalls, topTriangle[i]))){
+        int destRow = 2;
+        int destCol = 12;
+
+        for(int i=0; i<10; i++)
+        {
+            if(!Utilities.find(blueBalls, topTriangle[i]) && !Utilities.find(redBalls, topTriangle[i])){
                 destRow = Graph.getRow(topTriangle[i]);
                 destCol = Graph.getCol(topTriangle[i]);
                 break;
             }
         }
+
         for(int num:this.blueBalls)
         {
             int row = Graph.getRow(num);
             int col = Graph.getCol(num);
             blueUtility += manhattanDistance(row, col, destRow, destCol);
         }
+
+
         int redUtility = 0;
-        destRow = 16;
+        destRow = 14;
         destCol = 12;
+
+        for(int i=0; i<10; i++)
+        {
+            if(!Utilities.find(blueBalls, downTriangle[i]) && !Utilities.find(redBalls, downTriangle[i])){
+                destRow = Graph.getRow(downTriangle[i]);
+                destCol = Graph.getCol(downTriangle[i]);
+                break;
+            }
+        }
+
         for(int num:this.redBalls)
         {
             int row = Graph.getRow(num);
@@ -149,9 +177,9 @@ public class State implements Comparable<State> {
             redUtility += manhattanDistance(row, col, destRow, destCol);
         }
 
-        //System.out.println("blue ut = "+blueUtility);
-        //System.out.println("red ut = "+redUtility);
         //the more positive the more ability to win
+        // we subtract the blueUtility because the less distance between the AI and the target the better
+        // we add the redUtility because the more distance between the opponent and the target the better
         int utility = redUtility-blueUtility;
         this.setUtillity(utility);
         return utility;
