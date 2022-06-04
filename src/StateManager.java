@@ -5,6 +5,7 @@ public class StateManager
     public static State curr;
     private static final int ballsSize = 10;
 
+
     StateManager()
     {
         curr = State.getInitialState();
@@ -103,6 +104,7 @@ public class StateManager
     }
 
     public static ArrayList<Move> getValidMoves(State state)
+
     {
         State newState = new State(state);
         ArrayList<Move> result = new ArrayList<>();
@@ -171,7 +173,6 @@ public class StateManager
         }
         dest.setUtillity(src.getUtility());
     }
-
     public static void main(String[] args)
     {
         new Graph();
