@@ -41,13 +41,13 @@ click on its own so you can just play with the mouse.
 
 
 ## Screenshots:
-![ScreenShot](https://github.com/MohamedElhagry/Chinese-Checker-with-AI/Images/Screenshot 1.png)
+![ScreenShot](Images/Screenshot 1.png)
 
-![ScreenShot](https://github.com/MohamedElhagry/Chinese-Checker-with-AI/Images/Screenshot 2.png)
+![ScreenShot](Images/Screenshot 2.png)
 
-![ScreenShot](https://github.com/MohamedElhagry/Chinese-Checker-with-AI/Images/gameplay 1.png)
+![ScreenShot](Images/gameplay 1.png)
 
-![ScreenShot](https://github.com/MohamedElhagry/Chinese-Checker-with-AI/Images/gameplay 2.png)
+![ScreenShot](Images/gameplay 2.png)
 
 
 
