@@ -4,7 +4,7 @@ enum nodeState {
     Player, AI, Empty
 }
 
-public class GraphForGame {
+public class Graph {
 
     public class Node {
         nodeState state;
@@ -28,13 +28,11 @@ public class GraphForGame {
     static int numOfBalls = 10;
     static ArrayList<Integer>[] adjList;
     static Node[] nodes;
-    State state;
 
-    GraphForGame()
+    Graph()
     {
         adjList = new ArrayList[numOfCells];
         nodes = new Node[numOfCells];
-        state = new State();
         InitializeNodes();
         InitializeLinks();
     }
@@ -49,9 +47,9 @@ public class GraphForGame {
         return x * rowSize + y;
     }
 
-    boolean valid(int num)
+    public static boolean valid(int num)
     {
-        return num > 0 && num < numOfCells;
+        return num >= 0 && num < numOfCells;
     }
 
     public static int getRow(int num) {
@@ -76,7 +74,6 @@ public class GraphForGame {
             for (int node = 0; node < numOfNodes; node++) {
                 Node temp = new Node(r, start + node * 2, nodeState.Player);
                 nodes[temp.num] = temp;
-                state.redBalls[redI++] = temp.num;
             }
             numOfNodes++;
             start--;
@@ -113,7 +110,6 @@ public class GraphForGame {
             for (int node = 0; node < numOfNodes; node++) {
                 Node temp = new Node(r, start + node * 2, nodeState.AI);
                 nodes[temp.num] = temp;
-                state.blueBalls[blueI++] = temp.num;
             }
             numOfNodes--;
             start++;
@@ -155,7 +151,7 @@ public class GraphForGame {
 
     public static void main(String[] args)
     {
-        GraphForGame graph = new GraphForGame();
+        Graph graph = new Graph();
         //graph.printNodes();
     }
 
